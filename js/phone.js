@@ -1,32 +1,34 @@
-const loadPhone = async (searchText) => {
+const loadPhone = async (searchText, isShowAll) => {
   const res = await fetch(
     `https://openapi.programming-hero.com/api/phones?search=${searchText}`
   );
   const data = await res.json();
   const phones = data.data;
-  displayPhones(phones);
+  displayPhones(phones, isShowAll);
 };
 
-const displayPhones = phones => {
+const displayPhones = (phones, isShowAll) => {
   const phoneContainer = document.getElementById("phone-container");
-  phoneContainer.textContent = '';
+  phoneContainer.textContent = "";
 
   // display show all button if there are more than 12 phones
 
   const showAllContainer = document.getElementById("show-all-container");
-  if (phones.length > 12) {
-    showAllContainer.classList.remove('hidden');
+  if (phones.length > 12 && !isShowAll) {
+    showAllContainer.classList.remove("hidden");
   } else {
-    showAllContainer.classList.add('hidden');
+    showAllContainer.classList.add("hidden");
   }
 
+  // display only first 12 phone if not show all 
 
-  // display only first 12 phone 
-  phones = phones.slice(0,12)
+  if (!isShowAll) {
+    phones = phones.slice(0, 12);
+  }
 
-  phones.forEach(phones => {
-    // 2 create a div 
-    const phoneCard = document.createElement('div');
+  phones.forEach((phones) => {
+    // 2 create a div
+    const phoneCard = document.createElement("div");
     phoneCard.classList = "card bg-gray-100  shadow-xl";
     // set inner html
     phoneCard.innerHTML = `
@@ -44,21 +46,21 @@ const displayPhones = phones => {
   </div>`;
     // append child
     phoneContainer.appendChild(phoneCard);
-  })
+  });
   toggleLoadSpinner(false);
-}
+};
 
 
 // handel search button
 
-const handelSearch = () => {
+const handelSearch = (isShowAll) => {
   toggleLoadSpinner(true);
-   const searchField = document.getElementById("search-field");
-    const searchText = searchField.value;
-   console.log(searchText);
-   loadPhone(searchText);
+  const searchField = document.getElementById("search-field");
+  const searchText = searchField.value;
+  loadPhone(searchText, isShowAll);
+};
 
-}
+
 const toggleLoadSpinner = (isLoading) => {
   const loadinSpinner = document.getElementById("loading-spinner");
   if (isLoading) {
@@ -67,6 +69,11 @@ const toggleLoadSpinner = (isLoading) => {
     loadinSpinner.classList.add('hidden');
   }
 }   
+
+// handel show all
+const handelShowAll = (isShowAll) => {
+  handelSearch(true);
+}
 
 
 loadPhone();
