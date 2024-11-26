@@ -45,17 +45,28 @@ const displayPhones = phones => {
     // append child
     phoneContainer.appendChild(phoneCard);
   })
+  toggleLoadSpinner(false);
 }
 
 
 // handel search button
 
- const handelSearch =() => {
+const handelSearch = () => {
+  toggleLoadSpinner(true);
    const searchField = document.getElementById("search-field");
     const searchText = searchField.value;
    console.log(searchText);
    loadPhone(searchText);
+
 }
+const toggleLoadSpinner = (isLoading) => {
+  const loadinSpinner = document.getElementById("loading-spinner");
+  if (isLoading) {
+    loadinSpinner.classList.remove('hidden');
+  } else {
+    loadinSpinner.classList.add('hidden');
+  }
+}   
 
 
 loadPhone();
